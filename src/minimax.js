@@ -157,9 +157,16 @@ const minimaxAlphaBeta = (state, depth, maximizingPlayer) => {
             const possibleStates = state.nextStates();
             const minimizingPlayer = maximizingPlayer === 'x' ? 'o' : 'x';
             const currentPlayer = state.nextMovePlayer;
+            const valueOfState = heuristic(state, maximizingPlayer);
             let min = Infinity, max = -Infinity;
             for (let i = 0; i < possibleStates.length; i++) {
-                let result = minimax(possibleStates[i], depth - 1, maximizingPlayer);
+                alpha = Math.max(alpha, valueOfState);
+                beta = Math.min(beta, valueOfState);
+                if (currentPlayer === maximizingPlayer) {
+                    if (alpha > beta) break;
+                }
+                else if (beta < alpha) break;
+                let result = minimaxAlphaBetaInner(possibleStates[i], depth - 1, maximizingPlayer, alpha, beta);
                 max = result > max ? result : max;
                 min = result < min ? result : min;
             }
